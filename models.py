@@ -26,8 +26,7 @@ class Person(Base):
 class Country(Base):
     __tablename__ = "countries"
 
-    id = Column("id", Integer, primary_key=True)
-    name = Column("name", String)
+    name = Column("name", String, primary_key=True)
     tld = Column("tld", String)
     cca2 = Column("cca2", String)
     ccn3 = Column("ccn3", String)
@@ -61,12 +60,11 @@ class Country(Base):
     capitalInfo = Column("capitalInfo", String)
     postalCode = Column("postalCode", String)
 
-    def __init__(self, id, name, tld, cca2, ccn3, cca3, cioc, independent, status, unMember, 
+    def __init__(self, name, tld, cca2, ccn3, cca3, cioc, independent, status, unMember, 
         currencies, idd, capital, altSpellings, region, subregion, languages, latlng,
         landlocked, borders, area, flag, maps, population, gini, fifa, car, timezones,
         continents, flags, coatOfArms, startOfWeek, capitalInfo, postalCode):
 
-        self.id = id
         self.name = name
         self.tld = tld
         self.cca2 = cca2
@@ -117,20 +115,6 @@ class Test(Base):
 
     def toJson(self):
         return json.loads(self.name)
-    
-# {"name": {"common": "Brazil", "official": "Federative Republic of Brazil", "nativeName": {"por": {"official": "Rep\u00fablica Federativa do Brasil", "common": "Brasil"}}}}
 
-# name_obj = { 
-#     "name": {
-#         "common" : "Brazil",
-#         "official" : "Federative Republic of Brazil", 
-#         "nativeName" : {
-#             "por" : {
-#                 "official" : "República Federativa do Brasil",
-#                 "common" : "Brasil"
-#             }
-#         }
-#     }
-# }
 
 
