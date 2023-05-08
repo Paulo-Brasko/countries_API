@@ -2,7 +2,11 @@ import json
 from sqlalchemy import JSON, create_engine, ForeignKey, Column, String, Integer, CHAR
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from models import Base, Person, Country, Test
+from models import Base, Country
+
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
 
 engine = create_engine("sqlite:///mydb.db", echo=True)
 Base.metadata.create_all(bind=engine)
@@ -10,92 +14,111 @@ Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session=Session()
 
-# name_obj = { 
-#     "name": {
-#         "common" : "Brazil",
-#         "official" : "Federative Republic of Brazil", 
-#         "nativeName" : {
-#             "por" : {
-#                 "official" : "República Federativa do Brasil",
-#                 "common" : "Brasil"
-#             }
-#         }
-#     }
-# }
+@app.route("/")
+def index():
+    return render_template("main-page.html")
 
-# tld_array = [".br"]
-# cca2 = "BR"
-# ccn3 = "076"
-# cca3 = "BRA"
-# cioc = "BRA"
-# independent = "true"
-# status = "officially-assigned"
-# unMember = "true"
-# currencies_obj = {
-#     "BRL": {
-#         "name": "Brazilian real",
-#         "symbol": "R$"
-#     }
-# }
+@app.route("/addCountryToDatabase", methods = ["POST"])
+def addCountryToDatabase():
+    print("inside addCountryToDatabase...")
+    json_data = request.get_json()
+    addCountry(json_data)
+    return "ok"
 
-# idd_obj = {
-#     "root": "+5",
-#     "suffixes": [
-#         "5"
-#     ]
-# }
+def addCountry(json_data):
+    name_obj = json_data["name"]
+    tld_array = parseArrayData("tld", json_data)
+    cca2 = json_data["cca2"]
+    ccn3 = parseSingleData("ccn3", json_data)
+    cca3 = json_data["cca3"]
+    cioc = parseSingleData("cioc", json_data)
+    independent = parseBooleanData("independent", json_data)
+    status = json_data["status"]
+    unMember = json_data["unMember"]
+    currencies_obj = parseObjectData("currencies", json_data)
+    idd_obj = json_data["idd"]
+    capital_array = parseArrayData("capital", json_data)
+    altSpellings_array = json_data["altSpellings"]
+    region = json_data["region"]
+    subregion = parseSingleData("subregion", json_data)
+    languages_obj = parseObjectData("languages", json_data)
+    latlng_array = json_data["latlng"]
+    landlocked = json_data["landlocked"]
+    borders_array = parseArrayData("borders", json_data)
+    area = json_data["area"]
+    flag = json_data["flag"]
+    maps_obj = json_data["maps"]
+    population = json_data["population"]
+    
+    gini_obj = parseObjectData("gini", json_data)
+    fifa = parseSingleData("fifa", json_data)
 
-# capital = ["Brasilia"]
-# altSpellings = ["BR", "Brasil", "Federative Republic of Brazil", "República Federativa do Brasil"]
-# region = "Americas"
-# subregion = "South America"
-# languages_obj = { "por" : "Portuguese"}
-# latlng_array = ["-10", "-55"]
-# landlocked = "false"
-# borders_array = ["ARG", "BOL", "COL", "GUF", "GUY", "PRY", "PER", "SUR", "URY", "VEN"]
-# area = 8515767
-# flag = "BR"
-# maps_obj = {
-#     "googleMaps": "https://goo.gl/maps/waCKk21HeeqFzkNC9",
-#     "openStreetMaps": "https://www.openstreetmap.org/relation/59470"
-# }
-# population = 212559409
-# gini_obj = { "2019": 53.4 }
-# fifa = "BRA"
-# car_obj = { 
-#     "signs": [ "BR" ],
-#     "side": "right"
-# }
-# timezones_array = ["UTC-05:00", "UTC-04:00", "UTC-03:00", "UTC-02:00"]
-# continents_array = ["South America"]
-# flags_obj = {
-#     "png": "https://flagcdn.com/w320/br.png",
-#     "svg": "https://flagcdn.com/br.svg",
-#     "alt": "The flag of Brazil has a green field with a large yellow rhombus in the center. Within the rhombus is a dark blue globe with twenty-seven small five-pointed white stars depicting a starry sky and a thin white convex horizontal band inscribed with the national motto 'Ordem e Progresso' across its center."
-# }
-# coatOfArms_obj = {
-#     "png": "https://mainfacts.com/media/images/coats_of_arms/br.png",
-#     "svg": "https://mainfacts.com/media/images/coats_of_arms/br.svg"
-# }
-# startOfWeek = "monday"
-# capitalInfo_obj = { "latlng": [-15.79, -47.88] }
-# postalCode_obj = {
-#     "format": "#####-###",
-#     "regex": "^(\\d{8})$"
-# }
+    car_obj = json_data["car"]
+    timezones_array = json_data["timezones"]
+    continents_array = json_data["continents"]
+    flags_obj = json_data["flags"]
+    coatOfArms_obj = { "NA": "NA" }
+    startOfWeek = json_data["startOfWeek"]
+    capitalInfo_obj = json_data["capitalInfo"]
+    postalCode_obj = parseObjectData("postalCode", json_data)
 
-# country01 = Country(json.dumps(name_obj), ",".join(tld_array), cca2, ccn3, cca3, cioc, independent, status, unMember, 
-#         json.dumps(currencies_obj), json.dumps(idd_obj), ",".join(capital), ",".join(altSpellings), region, subregion,
-#         json.dumps(languages_obj), ",".join(latlng_array),
-#         landlocked, ",".join(borders_array), area, flag, json.dumps(maps_obj), population, json.dumps(gini_obj),
-#         fifa, json.dumps(car_obj), ",".join(timezones_array),
-#         ",".join(continents_array), json.dumps(flags_obj), json.dumps(coatOfArms_obj),
-#         startOfWeek, json.dumps(capitalInfo_obj), json.dumps(postalCode_obj))
-# session.add(country01)
-# session.commit()
+    country = Country(json.dumps(name_obj), ",".join(tld_array), cca2, ccn3, cca3, cioc, independent, 
+            status, unMember, json.dumps(currencies_obj), json.dumps(idd_obj), ",".join(capital_array), 
+            ",".join(altSpellings_array), region, subregion, json.dumps(languages_obj), 
+            ",".join(str(i) for i in latlng_array), landlocked, ",".join(borders_array), area, flag, 
+            json.dumps(maps_obj), population, json.dumps(gini_obj), fifa, json.dumps(car_obj), 
+            ",".join(timezones_array), ",".join(continents_array), json.dumps(flags_obj), 
+            json.dumps(coatOfArms_obj), startOfWeek, json.dumps(capitalInfo_obj), json.dumps(postalCode_obj))
+    session.add(country)
+    session.commit()
 
-results = session.query(Country).all()
-print(results)
+def parseObjectData(keyword, json_data): 
+    if keyword in json_data:
+        value = json_data[keyword]
+        if len(value) == 0:
+            value = {"NA" : "NA"}
+    else:
+        value = {"NA" : "NA"}
+    return value
+
+def parseArrayData(keyword, json_data): 
+    if keyword in json_data:
+        value = json_data[keyword]
+        if not value:
+            value = ["NA"]
+    else:
+        value = ["NA"]
+    return value
+
+def parseSingleData(keyword, json_data): 
+    if keyword in json_data:
+        value = json_data[keyword]
+    else:
+        value = "NA"
+    return value
+
+def parseBooleanData(keyword, json_data): 
+    if keyword in json_data:
+        value = json_data[keyword]
+    else:
+        value = False
+    return value
+
+if __name__ == "__main__":
+    app.run()
+
+
+
+
+
+
+
+# print("banana")
+# results = session.query(Country).all()
+# for r in results:
+#     print(r)
+# print("end")
+
 
 # results = session.query(Person).filter(Person.lastName == "Grown")
 # for r in results:
