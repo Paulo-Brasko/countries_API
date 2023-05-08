@@ -8,7 +8,7 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-engine = create_engine("sqlite:///mydb.db", echo=True)
+engine = create_engine("sqlite:///countries.db", echo=True)
 Base.metadata.create_all(bind=engine)
 
 Session = sessionmaker(bind=engine)
@@ -17,6 +17,16 @@ session=Session()
 @app.route("/")
 def index():
     return render_template("main-page.html")
+
+@app.route("/getListOfCountries")
+def getListOfCountries():
+    countries = session.query(Country).all()
+    listOfCountries = []
+    for country in countries:
+        json_data = json.loads(country.name)
+        listOfCountries.append(json_data["common"])
+    listOfCountries.sort()
+    return listOfCountries;
 
 @app.route("/addCountryToDatabase", methods = ["POST"])
 def addCountryToDatabase():
