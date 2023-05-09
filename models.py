@@ -24,9 +24,9 @@ class Country(Base):
     subregion = Column("subregion", String)
     languages = Column("languages", String)
     latlng = Column("latlng", String)
-    landlocked = Column("landlocked", String)
+    landlocked = Column("landlocked", Boolean)
     borders = Column("borders", String)
-    area = Column("area", String)
+    area = Column("area", Integer)
     flag = Column("flag", String)
     maps = Column("translations", String)
     population = Column("population", String)
@@ -104,7 +104,7 @@ class Country(Base):
         response["region"] = self.region
         response["subregion"] = self.subregion
         response["languages"] = json.loads(self.languages)
-        response["latlng"] = [self.latlng]
+        response["latlng"] = [int(i) for i in self.latlng.split(",")]
         response["landlocked"] = self.landlocked
         response["borders"] = self.borders.split(",")
         response["area"] = self.area
