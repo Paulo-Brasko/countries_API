@@ -7,7 +7,30 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>main-page</h1>
-    <h2> the end points description will be added here </h2>
+    <h1>Countries API</h1>
+    <h2>This API has been created just to help students to practice AJAX transactions</h2>
+    <h2> Current endpoints for this API:</h2>
+    <ul>
+        <li> 
+            <h3>/countries</h3>
+            <p>provides a list of countries found in the database.</p>
+        </li>
+        <li>
+            <h3>/country/{name}/</h3>
+            <p>provides the country description (lots of info here)</p>
+            <p>Example: /country/brazil</p>
+        </li>
+        <li>
+            <h3>/countries/language/{language}</h3>
+            <p>provides a list of countries that speaks a given language</p>
+            <p>Example: /countries/language/portuguese</p>
+        </li>
+        <li>
+            <h3>/countries/region/{region}</h3>
+            <p>provides a list of countries found in a given region</p>
+            <p>Example: /countries/region/africa</p>
+            <p>Possible regions: Europe, Asia, Africa, Oceania, Americas, Antarctic</p>
+        </li>
+    </ul>
 </body>
 </html>
