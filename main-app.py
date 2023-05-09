@@ -34,7 +34,7 @@ def getCountryByName(name):
     for country in countries:
         json_data = json.loads(country.name)
         country_name = json_data["common"]
-        if (country_name == name):
+        if (country_name.lower() == name.lower()):
             return country.toJson()
     return "country not found"
 

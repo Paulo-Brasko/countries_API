@@ -104,7 +104,7 @@ class Country(Base):
         response["region"] = self.region
         response["subregion"] = self.subregion
         response["languages"] = json.loads(self.languages)
-        response["latlng"] = [int(i) for i in self.latlng.split(",")]
+        response["latlng"] = [float(i) for i in self.latlng.split(",")]
         response["landlocked"] = self.landlocked
         response["borders"] = self.borders.split(",")
         response["area"] = self.area
