@@ -38,5 +38,30 @@ def getCountryByName(name):
             return country.toJson()
     return "country not found"
 
+@app.route("/countries/language/<language>")
+def getCountriesThatSpeakLanguage(language):
+    countries = session.query(Country).all()
+    listOfCountries = []
+    for country in countries:
+        languages = json.loads(country.languages)
+        for key in languages:
+            if languages[key].lower() == language.lower():
+                json_data = json.loads(country.name)
+                country_name = json_data["common"]
+                listOfCountries.append(country_name)
+    return listOfCountries
+
+@app.route("/countries/region/<region>")
+def getCountriesFromRegion(region):
+    countries = session.query(Country).all()
+    listOfCountries = []
+    for country in countries:
+        current_region = country.region
+        if current_region.lower() == region.lower():
+            json_data = json.loads(country.name)
+            country_name = json_data["common"]
+            listOfCountries.append(country_name)
+    return listOfCountries
+
 if __name__ == "__main__":
     app.run()
