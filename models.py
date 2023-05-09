@@ -82,6 +82,48 @@ class Country(Base):
 
     def __repr__(self):
         return f"({self.name})"
+    
+    def toJson(self):
+        json_array = []
+        print(self.name)
+        response = {}
+        response["name"] = json.loads(self.name)
+        response["tld"] = [self.tld]
+        response["cca2"] = self.cca2
+        response["ccn3"] = self.ccn3
+        response["cca3"] = self.cca3
+        response["cioc"] = self.cioc
+        response["independent"] = self.independent
+        response["status"] = self.status
+        response["unMember"] = self.unMember
+        response["currencies"] = json.loads(self.currencies)
+
+        response["idd"] = json.loads(self.idd)
+        response["capital"] = [self.capital]
+        response["altSpellings"] = self.altSpellings.split(",")
+        response["region"] = self.region
+        response["subregion"] = self.subregion
+        response["languages"] = json.loads(self.languages)
+        response["latlng"] = [self.latlng]
+        response["landlocked"] = self.landlocked
+        response["borders"] = self.borders.split(",")
+        response["area"] = self.area
+        response["flag"] = self.flag
+        response["maps"] = json.loads(self.maps)
+        response["population"] = self.population
+        response["gini"] = json.loads(self.gini)
+        response["fifa"] = self.fifa
+        response["car"] = json.loads(self.car)
+        response["timezones"] =  self.timezones.split(",")
+        response["continents"] = [self.continents]
+        response["flags"] = json.loads(self.flags)
+        response["coatOfArms"] = json.loads(self.coatOfArms)
+        response["startOfWeek"] = self.startOfWeek
+        response["capitalInfo"] = json.loads(self.capitalInfo)
+        response["postalCode"] = json.loads(self.postalCode)
+
+        json_array.append(response)
+        return json_array
 
 
 

@@ -18,7 +18,7 @@ session=Session()
 def index():
     return render_template("main-page.html")
 
-@app.route("/getListOfCountries")
+@app.route("/countries")
 def getListOfCountries():
     countries = session.query(Country).all()
     listOfCountries = []
@@ -27,6 +27,16 @@ def getListOfCountries():
         listOfCountries.append(json_data["common"])
     listOfCountries.sort()
     return listOfCountries;
+
+@app.route("/country/<name>/")
+def getCountryByName(name):
+    countries = session.query(Country).all()
+    for country in countries:
+        json_data = json.loads(country.name)
+        country_name = json_data["common"]
+        if (country_name == name):
+            return country.toJson()
+    return "country not found"
 
 @app.route("/addCountryToDatabase", methods = ["POST"])
 def addCountryToDatabase():
