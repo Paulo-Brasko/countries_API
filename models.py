@@ -124,6 +124,3 @@ class Country(Base):
 
         json_array.append(response)
         return json_array
-
-
-
